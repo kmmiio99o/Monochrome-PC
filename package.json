@@ -29,13 +29,13 @@
     "extraResources": [],
     "linux": {
       "target": [
-              "deb",
-              "rpm",
-              "AppImage"
-            ],
-            "category": "Audio",
-            "icon": "assets/icon.png",
-            "maintainer": "kmmiio99o <kmmiio99o@users.noreply.github.com>"
+        "deb",
+        "rpm",
+        "AppImage"
+      ],
+      "category": "Audio",
+      "icon": "assets/icon.png",
+      "maintainer": "kmmiio99o <kmmiio99o@users.noreply.github.com>"
     },
     "mac": {
       "target": [
