@@ -28,23 +28,29 @@
     ],
     "extraResources": [],
     "linux": {
-      "target": ["AppImage", "deb", "rpm", "pacman"],
-      "category": "Audio",
-      "icon": "assets/icon.png",
-      "maintainer": "kmmiio99o <kmmiio99o@users.noreply.github.com>",
-      "desktopName": "Monochrome Player",
-      "synopsis": "Desktop player for Monochrome music",
-      "description": "A minimalist desktop wrapper for monochrome.tf with Discord Rich Presence, tray controls, and media keys.",
-      "publish": null
+      "target": [
+              "deb",
+              "rpm",
+              "AppImage"
+            ],
+            "category": "Audio",
+            "icon": "assets/icon.png",
+            "maintainer": "kmmiio99o <kmmiio99o@users.noreply.github.com>"
     },
     "mac": {
-      "target": ["dmg", "zip"],
+      "target": [
+        "dmg",
+        "zip"
+      ],
       "category": "public.app-category.music",
       "icon": "assets/icon.png",
       "darkModeSupport": true
     },
     "win": {
-      "target": ["nsis", "portable"],
+      "target": [
+        "nsis",
+        "portable"
+      ],
       "icon": "assets/icon.png"
     },
     "nsis": {
