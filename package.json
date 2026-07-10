@@ -53,6 +53,7 @@
       ],
       "icon": "assets/icon.png"
     },
+    "publish": null,
     "nsis": {
       "oneClick": false,
       "perMachine": false,

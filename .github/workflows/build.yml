@@ -50,9 +50,11 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Clean up blockmaps
+      - name: Clean up artifacts
         shell: bash
-        run: rm -f dist/*.blockmap
+        run: |
+          rm -f dist/*.blockmap dist/latest-*.yml dist/builder-debug.yml dist/elevate.exe
+          rm -rf dist/win-unpacked dist/linux-unpacked dist/mac-unpacked
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
