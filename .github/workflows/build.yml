@@ -2,10 +2,7 @@ name: Build and Release
 
 on:
   push:
-    branches: ["main", "master"]
-    tags: ["v*"]
-  pull_request:
-    branches: ["main", "master"]
+    branches: ["master"]
   workflow_dispatch:
 
 permissions:
@@ -46,12 +43,16 @@ jobs:
         run: bun install
 
       - name: Build TypeScript
-        run: npx tsc
+        run: bun tsc
 
       - name: Build electron app
-        run: npx electron-builder --${{ matrix.target }} --${{ matrix.arch }}
+        run: bun electron-builder --${{ matrix.target }} --${{ matrix.arch }} --publish never
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Clean up blockmaps
+        shell: bash
+        run: rm -f dist/*.blockmap
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
@@ -60,21 +61,34 @@ jobs:
           path: dist/*
 
   pkgbuild:
-    if: startsWith(github.ref, 'refs/tags/')
+    needs: [build]
     runs-on: ubuntu-latest
     container: archlinux:latest
     steps:
       - uses: actions/checkout@v4
 
+      - id: version
+        run: echo "VERSION=$(cat VERSION)" >> $GITHUB_OUTPUT
+
       - name: Install makepkg deps
         run: |
-          pacman -Syu --noconfirm base-devel nodejs npm git electron
+          pacman -Syu --noconfirm base-devel unzip
+          curl -fsSL https://bun.sh/install | bash
+          cp ~/.bun/bin/bun /usr/local/bin/bun
+
+      - name: Create source tarball from checkout
+        run: |
+          ver="${{ steps.version.outputs.VERSION }}"
+          mkdir -p "Monochrome-PC-$ver"
+          cp -r assets bun.lock flake.nix LICENSE package.json PKGBUILD src tsconfig.json .gitignore "Monochrome-PC-$ver/"
+          tar czf "monochrome-player-bin-$ver.tar.gz" "Monochrome-PC-$ver"
+          rm -rf "Monochrome-PC-$ver"
 
       - name: Build PKGBUILD
         run: |
           useradd -m builder
           chown -R builder:builder .
-          su builder -c "makepkg -sf --noconfirm"
+          su builder -c "makepkg -f --noconfirm --nodeps"
 
       - name: Upload Arch package
         uses: actions/upload-artifact@v4
@@ -83,7 +97,7 @@ jobs:
           path: ./*.pkg.tar.zst
 
   nix:
-    if: startsWith(github.ref, 'refs/tags/')
+    needs: [build]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -93,7 +107,7 @@ jobs:
           nix_path: nixpkgs=channel:nixos-unstable
 
       - name: Build Nix derivation
-        run: nix build .#monochrome-player
+        run: nix build .#monochrome-player --option sandbox false
 
       - name: Upload Nix derivation
         uses: actions/upload-artifact@v4
@@ -102,11 +116,13 @@ jobs:
           path: result
 
   release:
-    if: startsWith(github.ref, 'refs/tags/')
     needs: [build, pkgbuild, nix]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
+      - id: version
+        run: echo "VERSION=$(cat VERSION)" >> $GITHUB_OUTPUT
 
       - name: Download all artifacts
         uses: actions/download-artifact@v4
@@ -114,20 +130,45 @@ jobs:
           path: artifacts
 
       - name: Create Release
-        uses: softprops/action-gh-release@v2
-        with:
-          tag_name: ${{ github.ref_name }}
-          name: Monochrome Player ${{ github.ref_name }}
-          body: |
-            ## Monochrome Player ${{ github.ref_name }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          TAG="v${{ steps.version.outputs.VERSION }}"
+          gh release delete "$TAG" --yes 2>/dev/null || true
+          git push origin --delete refs/tags/"$TAG" 2>/dev/null || true
 
-            ### Downloads
-            - **Linux**: AppImage, deb, rpm, pacman
-            - **Windows**: NSIS installer, portable
-            - **macOS**: DMG, ZIP (Intel & Apple Silicon)
-            - **Arch Linux**: prebuilt .pkg.tar.zst package
-            - **NixOS**: flake.nix — `nix run github:kmmiio99o/Monochrome-PC`
-          files: |
-            artifacts/*/*
-          fail_on_unmatched_files: false
-          generate_release_notes: true
+          cat > notes.md <<- EOF
+          ## Downloads
+
+          | File | Platform |
+          |------|----------|
+          | \`.AppImage\` | Linux (portable) |
+          | \`.deb\` | Debian / Ubuntu |
+          | \`.rpm\` | Fedora / RHEL |
+          | \`.dmg\` | macOS (Intel) |
+          | \`.zip\` | macOS (Intel, portable) |
+          | \`-arm64.dmg\` | macOS (Apple Silicon) |
+          | \`-arm64-mac.zip\` | macOS (Apple Silicon, portable) |
+          | \`.exe\` | Windows (installer & portable) |
+          | \`.pkg.tar.zst\` | Arch Linux |
+
+          ### NixOS
+
+          \`\`\`
+          nix run github:kmmiio99o/Monochrome-PC
+          \`\`\`
+
+          Or add to your flake inputs:
+
+          \`\`\`nix
+          inputs.monochrome-player.url = "github:kmmiio99o/Monochrome-PC";
+          \`\`\`
+
+          EOF
+
+          gh release create "$TAG" --title "$TAG" --notes-file notes.md --target "${{ github.sha }}"
+          find artifacts -type f \
+            \( -name "*.AppImage" -o -name "*.deb" -o -name "*.rpm" \
+               -o -name "*.dmg" -o -name "*.zip" -o -name "*.exe" \
+               -o -name "*.pkg.tar.zst" -o -name "result" \) \
+            -exec gh release upload "$TAG" {} --clobber \;

@@ -1,5 +1,4 @@
-# Maintainer: Monochrome Player <monochrome-player@users.noreply.github.com>
-# Contributor: monochrome-player
+# Maintainer: kmmiio99o <kmmiio99o@users.noreply.github.com>
 
 pkgname=monochrome-player-bin
 pkgver=1.0.0
@@ -9,14 +8,15 @@ arch=("x86_64")
 url="https://github.com/kmmiio99o/Monochrome-PC"
 license=("MIT")
 depends=("electron" "libxss" "nss" "gtk3" "libnotify" "xdg-utils" "libsecret" "libappindicator-gtk3")
-makedepends=("nodejs" "npm" "git")
+makedepends=("nodejs" "bun" "git" "unzip")
 source=("$pkgname-$pkgver.tar.gz::https://github.com/kmmiio99o/Monochrome-PC/archive/refs/tags/v$pkgver.tar.gz")
 sha256sums=("SKIP")
 
 build() {
   cd "$srcdir/Monochrome-PC-$pkgver"
-  npm install
-  npx tsc
+  rm -f bun.lock
+  bun install
+  bun run tsc
 }
 
 package() {

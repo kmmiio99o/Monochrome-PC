@@ -17,13 +17,14 @@
 
           src = self;
 
-          nativeBuildInputs = with pkgs; [ nodejs_22 typescript ];
+          nativeBuildInputs = with pkgs; [ nodejs_22 typescript makeWrapper bun ];
 
           buildInputs = with pkgs; [ electron ];
 
           buildPhase = ''
-            npm install --ignore-scripts
-            npx tsc
+            rm -f bun.lock
+            bun install --ignore-scripts
+            bun run tsc
           '';
 
           installPhase = ''
@@ -62,7 +63,10 @@
         };
       in
       {
-        packages.default = monochrome-player;
+        packages = {
+          default = monochrome-player;
+          monochrome-player = monochrome-player;
+        };
 
         apps.default = {
           type = "app";
