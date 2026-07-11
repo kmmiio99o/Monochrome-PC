@@ -1,4 +1,4 @@
-import { RpcSettings, DiscordActivity } from "./types";
+import { RpcSettings } from "./types";
 
 export const DISCORD_CLIENT_ID = "1524834746486489300";
 
@@ -18,14 +18,20 @@ export const DEFAULT_RPC_SETTINGS: RpcSettings = {
   showTitle: true,
   showArtist: true,
   customStatus: "",
+  showOnIdle: false,
+  activityType: 2,
+  showTimestamp: true,
+  customDetails: "",
+  largeImageText: "",
+  smallImageKey: "",
+  smallImageText: "",
+  button1Label: "",
+  button1Url: "",
+  button2Label: "",
+  button2Url: "",
 };
 
 export const DEFAULT_SHOW_NAV_BAR = true;
-
-export const EMPTY_PRESENCE: DiscordActivity = {
-  type: 2,
-  instance: false,
-};
 
 export const PLAY_PAUSE_JS = `(function() { var btn = document.querySelector('.now-playing-bar .play-pause-btn'); if (btn) btn.click(); })()`;
 export const NEXT_JS = "(function() { var btn = document.querySelector('#next-btn'); if (btn) btn.click(); })()";

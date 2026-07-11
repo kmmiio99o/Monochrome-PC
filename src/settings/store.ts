@@ -16,6 +16,17 @@ export function loadSettings(): void {
       if (typeof parsed.showTitle === "boolean") state.rpcSettings.showTitle = parsed.showTitle;
       if (typeof parsed.showArtist === "boolean") state.rpcSettings.showArtist = parsed.showArtist;
       if (typeof parsed.customStatus === "string") state.rpcSettings.customStatus = parsed.customStatus;
+      if (typeof parsed.showOnIdle === "boolean") state.rpcSettings.showOnIdle = parsed.showOnIdle;
+      if (typeof parsed.activityType === "number") state.rpcSettings.activityType = parsed.activityType;
+      if (typeof parsed.showTimestamp === "boolean") state.rpcSettings.showTimestamp = parsed.showTimestamp;
+      if (typeof parsed.customDetails === "string") state.rpcSettings.customDetails = parsed.customDetails;
+      if (typeof parsed.largeImageText === "string") state.rpcSettings.largeImageText = parsed.largeImageText;
+      if (typeof parsed.smallImageKey === "string") state.rpcSettings.smallImageKey = parsed.smallImageKey;
+      if (typeof parsed.smallImageText === "string") state.rpcSettings.smallImageText = parsed.smallImageText;
+      if (typeof parsed.button1Label === "string") state.rpcSettings.button1Label = parsed.button1Label;
+      if (typeof parsed.button1Url === "string") state.rpcSettings.button1Url = parsed.button1Url;
+      if (typeof parsed.button2Label === "string") state.rpcSettings.button2Label = parsed.button2Label;
+      if (typeof parsed.button2Url === "string") state.rpcSettings.button2Url = parsed.button2Url;
       if (typeof parsed.showNavigationBar === "boolean") state.showNavigationBar = parsed.showNavigationBar;
     }
   } catch {

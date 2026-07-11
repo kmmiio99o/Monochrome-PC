@@ -3,6 +3,17 @@ export interface RpcSettings {
   showTitle: boolean;
   showArtist: boolean;
   customStatus: string;
+  showOnIdle: boolean;
+  activityType: number;
+  showTimestamp: boolean;
+  customDetails: string;
+  largeImageText: string;
+  smallImageKey: string;
+  smallImageText: string;
+  button1Label: string;
+  button1Url: string;
+  button2Label: string;
+  button2Url: string;
 }
 
 export interface TrackInfo {

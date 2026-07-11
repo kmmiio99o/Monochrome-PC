@@ -1,7 +1,9 @@
+import DiscordRpc from "discord-rpc";
 import { state } from "../state";
 import { DISCORD_CLIENT_ID } from "../config";
-
-const DiscordRpc = require("discord-rpc");
+import { updateTray } from "../app/tray";
+import { updateDiscordPresence } from "./presence";
+import { syncWebviewState } from "../ipc/handlers";
 
 export async function initDiscordRpc(): Promise<void> {
   try {
@@ -10,22 +12,20 @@ export async function initDiscordRpc(): Promise<void> {
 
     state.discordRpc.on("ready", () => {
       state.discordConnected = true;
-      const { updateTray } = require("../app/tray");
-      const { updateDiscordPresence } = require("./presence");
       updateTray();
       updateDiscordPresence();
+      syncWebviewState();
     });
 
     state.discordRpc.on("disconnected", () => {
       state.discordConnected = false;
-      const { updateTray } = require("../app/tray");
       updateTray();
+      syncWebviewState();
     });
 
     await state.discordRpc.login({ clientId: DISCORD_CLIENT_ID });
   } catch (e: unknown) {
     state.discordConnected = false;
-    const { updateTray } = require("../app/tray");
     updateTray();
     console.error("Discord RPC init failed:", (e as Error).message);
   }
@@ -37,4 +37,9 @@ export function destroyDiscordRpc(): void {
     state.discordRpc = null;
     state.discordConnected = false;
   }
+}
+
+export async function reconnectDiscordRpc(): Promise<void> {
+  destroyDiscordRpc();
+  await initDiscordRpc();
 }

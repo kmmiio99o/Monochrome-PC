@@ -1,10 +1,11 @@
-import { BrowserWindow, Tray } from "electron";
+import { BrowserWindow, Tray, WebContents } from "electron";
 import { RpcSettings, TrackInfo, DiscordClient } from "./types";
 import { DEFAULT_RPC_SETTINGS, DEFAULT_SHOW_NAV_BAR } from "./config";
 import { isTilingWM } from "./environment";
 
 export const state = {
   mainWindow: null as BrowserWindow | null,
+  webviewWC: null as WebContents | null,
   tray: null as Tray | null,
   discordRpc: null as DiscordClient | null,
   discordConnected: false,

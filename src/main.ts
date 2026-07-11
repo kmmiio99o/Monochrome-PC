@@ -1,11 +1,11 @@
 import { app } from "electron";
+import * as path from "path";
 import { state } from "./state";
 import { loadSettings, saveSettings } from "./settings/store";
 import { createWindow } from "./app/window";
 import { createTray, updateTray } from "./app/tray";
 import { registerMediaKeys, unregisterMediaKeys } from "./app/media-keys";
 import { registerIpcHandlers } from "./ipc/handlers";
-import { promptCustomStatus } from "./ipc/prompt-window";
 import { initDiscordRpc, destroyDiscordRpc } from "./discord/client";
 import { updateDiscordPresence, clearDiscordPresence } from "./discord/presence";
 import { stopPlayerPolling } from "./player/poller";
@@ -38,7 +38,7 @@ if (!gotLock) {
 
   if (process.defaultApp) {
     if (process.argv.length >= 2) {
-      app.setAsDefaultProtocolClient("monochrome-player", process.execPath, [require("path").resolve(process.argv[1])]);
+      app.setAsDefaultProtocolClient("monochrome-player", process.execPath, [path.resolve(process.argv[1])]);
     }
   } else {
     app.setAsDefaultProtocolClient("monochrome-player");
@@ -49,7 +49,7 @@ if (!gotLock) {
   app.whenReady().then(async () => {
     loadSettings();
     createWindow();
-    createTray(onRpcChanged, promptCustomStatus);
+    createTray();
     registerMediaKeys();
 
     try {

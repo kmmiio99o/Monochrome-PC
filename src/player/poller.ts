@@ -2,6 +2,8 @@ import { state } from "../state";
 import { POLL_INTERVAL_MS, INITIAL_POLL_DELAY_MS } from "../config";
 import { PollResult } from "../types";
 import { sendNotification } from "./controls";
+import { updateDiscordPresence } from "../discord/presence";
+import { updateTray } from "../app/tray";
 
 let _initialPollComplete = false;
 
@@ -51,21 +53,15 @@ function pollOnce(): void {
         if (trackKey !== currentKey) {
           state.currentTrack = data.track;
           state.isPlaying = data.isPlaying;
-          // Account for current playback position when setting start time
           state.trackStartTime = data.isPlaying ? Date.now() - (data.progress || 0) * 1000 : null;
 
-          const { updateDiscordPresence } = require("../discord/presence");
-          const { updateTray } = require("../app/tray");
           updateDiscordPresence();
           updateTray();
           if (_initialPollComplete) sendNotification(data.track);
         } else if (data.isPlaying !== state.isPlaying) {
           state.isPlaying = data.isPlaying;
-          // Account for current playback position when resuming
           if (data.isPlaying) state.trackStartTime = Date.now() - (data.progress || 0) * 1000;
 
-          const { updateDiscordPresence } = require("../discord/presence");
-          const { updateTray } = require("../app/tray");
           updateDiscordPresence();
           updateTray();
         }
