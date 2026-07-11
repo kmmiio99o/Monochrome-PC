@@ -18,9 +18,6 @@ export function updateDiscordPresence(): void {
 
     const activity: Record<string, unknown> = {
       details,
-      state: state.rpcSettings.customStatus
-        ? state.rpcSettings.customStatus.substring(0, 128)
-        : artistState,
       largeImageKey: state.currentTrack.albumArt || undefined,
       largeImageText:
         (state.isPlaying ? "" : "\u23F8 ") +
@@ -30,6 +27,11 @@ export function updateDiscordPresence(): void {
       instance: false,
     };
 
+    const activityState = state.rpcSettings.customStatus
+      ? state.rpcSettings.customStatus.substring(0, 128)
+      : artistState;
+    if (activityState) activity.state = activityState;
+
     if (state.isPlaying && state.trackStartTime) {
       activity.startTimestamp = state.trackStartTime;
       const dur = state.currentTrack.duration;
@@ -38,7 +40,7 @@ export function updateDiscordPresence(): void {
       }
     }
 
-    state.discordRpc.setActivity(activity);
+    state.discordRpc.setActivity(activity).catch(() => {});
   } catch {
     // Silently fail on RPC errors
   }
