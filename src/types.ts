@@ -4,6 +4,7 @@ export interface RpcSettings {
   showArtist: boolean;
   customStatus: string;
   showOnIdle: boolean;
+  showOnPause: boolean;
   activityType: number;
   showTimestamp: boolean;
   customDetails: string;

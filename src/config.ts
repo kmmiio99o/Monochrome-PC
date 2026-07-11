@@ -19,6 +19,7 @@ export const DEFAULT_RPC_SETTINGS: RpcSettings = {
   showArtist: true,
   customStatus: "",
   showOnIdle: false,
+  showOnPause: true,
   activityType: 2,
   showTimestamp: true,
   customDetails: "",

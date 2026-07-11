@@ -47,7 +47,7 @@ webview.fullscreen{top:0!important}
   <button id="reload-btn" title="Reload">${SVG.reload}</button>
   <div id="spacer"></div>${winBtns}
 </div>
-<webview id="app" src="https://monochrome.tf" webpreferences="contextIsolation=yes,webSecurity=no" allowpopups></webview>
+<webview id="app" src="https://monochrome.tf" webpreferences="contextIsolation=yes" allowpopups></webview>
 <script>
 var w=document.getElementById('app');
 var bar=document.getElementById('bar');

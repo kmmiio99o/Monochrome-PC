@@ -8,6 +8,17 @@ app.on("web-contents-created", (_event, contents) => {
   if (contents.getType() !== "webview") return;
   state.webviewWC = contents;
 
+  contents.setUserAgent(
+    "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+  );
+
+  contents.session.setPermissionRequestHandler((_wc, _permission, callback) => {
+    callback(true);
+  });
+  contents.session.setPermissionCheckHandler((_wc, _permission, _origin, _details) => {
+    return true;
+  });
+
   contents.on("console-message", (_event2, _level, message) => {
     if (!message.startsWith("ELECTRON_SETTING:")) return;
     const msg = message.slice(17);
@@ -21,6 +32,10 @@ app.on("web-contents-created", (_event, contents) => {
 
   contents.on("did-finish-load", () => {
     injectSettingsTab();
+  });
+
+  contents.on("render-process-gone", () => {
+    contents.reload();
   });
 });
 
@@ -39,6 +54,7 @@ export function syncWebviewState(): void {
     rpcShowTitle: s.showTitle,
     rpcShowArtist: s.showArtist,
     rpcShowOnIdle: s.showOnIdle,
+    rpcShowOnPause: s.showOnPause,
     rpcShowTimestamp: s.showTimestamp,
     rpcActivityType: s.activityType,
     rpcCustomDetails: s.customDetails,
@@ -51,7 +67,7 @@ export function syncWebviewState(): void {
     rpcButton2Url: s.button2Url,
     rpcConnected: state.discordConnected,
   };
-  const script = 'window.__electronSettingsSync=' + JSON.stringify(payload) + ';(function(){var s=window.__electronSettingsSync;var c=function(id,v){var el=document.getElementById(id);if(el&&el.type==="checkbox")el.checked=v};var se=function(id,v){var el=document.getElementById(id);if(el&&el.tagName==="SELECT")el.value=v};var ti=function(id,v){var el=document.getElementById(id);if(el&&el.type==="text")el.value=v};c("electron-navbar-toggle",s.showNavigationBar);c("electron-closetotray-toggle",s.closeToTray);c("electron-rpc-toggle",s.rpcEnabled);c("electron-rpc-title-toggle",s.rpcShowTitle);c("electron-rpc-artist-toggle",s.rpcShowArtist);c("electron-rpc-idle-toggle",s.rpcShowOnIdle);c("electron-rpc-timestamp-toggle",s.rpcShowTimestamp);se("electron-rpc-activity-type",s.rpcActivityType);ti("electron-rpc-custom-details",s.rpcCustomDetails||"");ti("electron-rpc-large-image-text",s.rpcLargeImageText||"");ti("electron-rpc-small-image-key",s.rpcSmallImageKey||"");ti("electron-rpc-small-image-text",s.rpcSmallImageText||"");ti("electron-rpc-button1-label",s.rpcButton1Label||"");ti("electron-rpc-button1-url",s.rpcButton1Url||"");ti("electron-rpc-button2-label",s.rpcButton2Label||"");ti("electron-rpc-button2-url",s.rpcButton2Url||"");var st=document.getElementById("electron-rpc-status");if(st)st.textContent=s.rpcConnected?"Connected":"Disconnected";})()';
+  const script = 'window.__electronSettingsSync=' + JSON.stringify(payload) + ';(function(){var s=window.__electronSettingsSync;var c=function(id,v){var el=document.getElementById(id);if(el&&el.type==="checkbox")el.checked=v};var se=function(id,v){var el=document.getElementById(id);if(el&&el.tagName==="SELECT")el.value=v};var ti=function(id,v){var el=document.getElementById(id);if(el&&el.type==="text")el.value=v};c("electron-navbar-toggle",s.showNavigationBar);c("electron-closetotray-toggle",s.closeToTray);c("electron-rpc-toggle",s.rpcEnabled);c("electron-rpc-title-toggle",s.rpcShowTitle);c("electron-rpc-artist-toggle",s.rpcShowArtist);c("electron-rpc-idle-toggle",s.rpcShowOnIdle);c("electron-rpc-pause-toggle",s.rpcShowOnPause);c("electron-rpc-timestamp-toggle",s.rpcShowTimestamp);se("electron-rpc-activity-type",s.rpcActivityType);ti("electron-rpc-custom-details",s.rpcCustomDetails||"");ti("electron-rpc-large-image-text",s.rpcLargeImageText||"");ti("electron-rpc-small-image-key",s.rpcSmallImageKey||"");ti("electron-rpc-small-image-text",s.rpcSmallImageText||"");ti("electron-rpc-button1-label",s.rpcButton1Label||"");ti("electron-rpc-button1-url",s.rpcButton1Url||"");ti("electron-rpc-button2-label",s.rpcButton2Label||"");ti("electron-rpc-button2-url",s.rpcButton2Url||"");var st=document.getElementById("electron-rpc-status");if(st)st.textContent=s.rpcConnected?"Connected":"Disconnected";})()';
   state.webviewWC.executeJavaScript(script).catch(() => {});
 }
 
@@ -84,6 +100,10 @@ function handleSettingsMessage(msg: string): void {
             break;
           case "showOnIdle":
             state.rpcSettings.showOnIdle = val === "1";
+            _onRpcChanged?.();
+            break;
+          case "showOnPause":
+            state.rpcSettings.showOnPause = val === "1";
             _onRpcChanged?.();
             break;
           case "showTimestamp":

@@ -17,6 +17,7 @@ export function loadSettings(): void {
       if (typeof parsed.showArtist === "boolean") state.rpcSettings.showArtist = parsed.showArtist;
       if (typeof parsed.customStatus === "string") state.rpcSettings.customStatus = parsed.customStatus;
       if (typeof parsed.showOnIdle === "boolean") state.rpcSettings.showOnIdle = parsed.showOnIdle;
+      if (typeof parsed.showOnPause === "boolean") state.rpcSettings.showOnPause = parsed.showOnPause;
       if (typeof parsed.activityType === "number") state.rpcSettings.activityType = parsed.activityType;
       if (typeof parsed.showTimestamp === "boolean") state.rpcSettings.showTimestamp = parsed.showTimestamp;
       if (typeof parsed.customDetails === "string") state.rpcSettings.customDetails = parsed.customDetails;

@@ -1,4 +1,4 @@
-import { app } from "electron";
+import { app, protocol, net } from "electron";
 import * as path from "path";
 import { state } from "./state";
 import { loadSettings, saveSettings } from "./settings/store";
@@ -25,6 +25,10 @@ function onRpcChanged(): void {
 
 const gotLock = app.requestSingleInstanceLock();
 
+protocol.registerSchemesAsPrivileged([
+  { scheme: "mono", privileges: { standard: true, secure: true, supportFetchAPI: true, corsEnabled: true } },
+]);
+
 if (!gotLock) {
   app.quit();
 } else {
@@ -46,7 +50,17 @@ if (!gotLock) {
 
   registerIpcHandlers(onRpcChanged);
 
+  app.commandLine.appendSwitch("disable-blink-features", "AutomationControlled");
+
   app.whenReady().then(async () => {
+    protocol.handle("mono", (request) => {
+      const url = new URL(request.url);
+      if (url.hostname === "icon") {
+        return net.fetch("file://" + path.join(__dirname, "..", "assets", "icon.png"));
+      }
+      return new Response("Not found", { status: 404 });
+    });
+
     loadSettings();
     createWindow();
     createTray();

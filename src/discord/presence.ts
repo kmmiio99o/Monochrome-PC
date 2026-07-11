@@ -25,6 +25,11 @@ export function updateDiscordPresence(): void {
     return;
   }
 
+  if (!state.isPlaying && !state.rpcSettings.showOnPause) {
+    clearDiscordPresence();
+    return;
+  }
+
   try {
     const s = state.rpcSettings;
     const details = s.customDetails
