@@ -1,6 +1,7 @@
 import { BrowserWindow, Tray } from "electron";
 import { RpcSettings, TrackInfo, DiscordClient } from "./types";
-import { DEFAULT_RPC_SETTINGS } from "./config";
+import { DEFAULT_RPC_SETTINGS, DEFAULT_SHOW_NAV_BAR } from "./config";
+import { isTilingWM } from "./environment";
 
 export const state = {
   mainWindow: null as BrowserWindow | null,
@@ -14,4 +15,6 @@ export const state = {
   playerPollInterval: null as ReturnType<typeof setInterval> | null,
   closeToTray: true,
   isQuitting: false,
+  showNavigationBar: DEFAULT_SHOW_NAV_BAR,
+  isTilingWM: isTilingWM(),
 };

@@ -18,6 +18,7 @@ export function loadSettings(): void {
       if (typeof parsed.showTitle === "boolean") state.rpcSettings.showTitle = parsed.showTitle;
       if (typeof parsed.showArtist === "boolean") state.rpcSettings.showArtist = parsed.showArtist;
       if (typeof parsed.customStatus === "string") state.rpcSettings.customStatus = parsed.customStatus;
+      if (typeof parsed.showNavigationBar === "boolean") state.showNavigationBar = parsed.showNavigationBar;
     }
   } catch {
     // File doesn't exist or is invalid — use defaults
@@ -28,7 +29,8 @@ export function saveSettings(): void {
   try {
     const dir = path.dirname(settingsPath());
     if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
-    fs.writeFileSync(settingsPath(), JSON.stringify(state.rpcSettings, null, 2));
+    const data = { ...state.rpcSettings, showNavigationBar: state.showNavigationBar };
+    fs.writeFileSync(settingsPath(), JSON.stringify(data, null, 2));
   } catch {
     // Silently fail on write errors
   }

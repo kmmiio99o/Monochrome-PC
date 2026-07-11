@@ -3,6 +3,8 @@ import { Tray, Menu, nativeImage, app } from "electron";
 import { state } from "../state";
 import { DISCORD_CLIENT_ID } from "../config";
 import { playPause, nextTrack, prevTrack } from "../player/controls";
+import { saveSettings } from "../settings/store";
+import { updateNavBar } from "./window";
 
 let _onRpcChanged: (() => void) | null = null;
 let _promptCustomStatus: (() => void) | null = null;
@@ -126,6 +128,17 @@ function rebuildTrayMenu(): void {
             },
           },
         ],
+      },
+      { type: "separator" },
+      {
+        label: "Show Navigation Bar",
+        type: "checkbox",
+        checked: state.showNavigationBar,
+        click: async () => {
+          await updateNavBar();
+          saveSettings();
+          rebuildTrayMenu();
+        },
       },
       { type: "separator" },
       {

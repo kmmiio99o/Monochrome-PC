@@ -21,6 +21,8 @@ export const DEFAULT_RPC_SETTINGS: RpcSettings = {
   customStatus: "",
 };
 
+export const DEFAULT_SHOW_NAV_BAR = true;
+
 export const EMPTY_PRESENCE: DiscordActivity = {
   type: 2,
   instance: false,

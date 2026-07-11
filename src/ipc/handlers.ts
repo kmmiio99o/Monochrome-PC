@@ -14,4 +14,35 @@ export function registerIpcHandlers(onRpcChanged: () => void): void {
     state.rpcSettings.customStatus = value || "";
     onRpcChanged();
   });
+
+  ipcMain.on("nav:back", () => {
+    void state.mainWindow?.webContents.goBack();
+  });
+
+  ipcMain.on("nav:forward", () => {
+    void state.mainWindow?.webContents.goForward();
+  });
+
+  ipcMain.on("nav:reload", () => {
+    state.mainWindow?.webContents.reload();
+  });
+
+  ipcMain.on("nav:minimize", () => {
+    state.mainWindow?.minimize();
+  });
+
+  ipcMain.on("nav:maximize", () => {
+    if (state.mainWindow?.isMaximized()) state.mainWindow.unmaximize();
+    else state.mainWindow?.maximize();
+  });
+
+  ipcMain.on("nav:close", () => {
+    state.mainWindow?.close();
+  });
+
+  ipcMain.handle("nav:toggle", async () => {
+    const { updateNavBar } = await import("../app/window");
+    await updateNavBar();
+    return state.showNavigationBar;
+  });
 }
