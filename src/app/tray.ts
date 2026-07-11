@@ -51,13 +51,17 @@ function rebuildTrayMenu(): void {
         (state.currentTrack.artist ? " \u2014 " + state.currentTrack.artist : "")
       : null;
 
-  state.tray.setContextMenu(
-    Menu.buildFromTemplate([
-      {
-        label: nowPlaying ? "Now Playing: " + nowPlaying.substring(0, 60) : "Not Playing",
-        enabled: false,
-      },
-      { type: "separator" },
+  const template: Electron.MenuItemConstructorOptions[] = [];
+
+  if (nowPlaying) {
+    template.push({
+      label: nowPlaying.substring(0, 60),
+      enabled: false,
+    });
+    template.push({ type: "separator" });
+  }
+
+  template.push(
       {
         label: state.isPlaying ? "Pause" : "Play",
         click: () => playPause(),
@@ -139,6 +143,6 @@ function rebuildTrayMenu(): void {
           app.quit();
         },
       },
-    ]),
   );
+  state.tray.setContextMenu(Menu.buildFromTemplate(template));
 }

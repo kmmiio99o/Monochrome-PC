@@ -1,4 +1,4 @@
-import { app, globalShortcut } from "electron";
+import { app } from "electron";
 import { state } from "./state";
 import { loadSettings, saveSettings } from "./settings/store";
 import { createWindow } from "./app/window";

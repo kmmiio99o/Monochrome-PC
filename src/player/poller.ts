@@ -53,7 +53,8 @@ function pollOnce(): void {
         if (trackKey !== currentKey) {
           state.currentTrack = data.track;
           state.isPlaying = data.isPlaying;
-          state.trackStartTime = data.isPlaying ? Date.now() : null;
+          // Account for current playback position when setting start time
+          state.trackStartTime = data.isPlaying ? Date.now() - (data.progress || 0) * 1000 : null;
 
           const { updateDiscordPresence } = require("../discord/presence");
           const { updateTray } = require("../app/tray");
@@ -62,7 +63,8 @@ function pollOnce(): void {
           if (_initialPollComplete) sendNotification(data.track);
         } else if (data.isPlaying !== state.isPlaying) {
           state.isPlaying = data.isPlaying;
-          if (data.isPlaying) state.trackStartTime = Date.now();
+          // Account for current playback position when resuming
+          if (data.isPlaying) state.trackStartTime = Date.now() - (data.progress || 0) * 1000;
 
           const { updateDiscordPresence } = require("../discord/presence");
           const { updateTray } = require("../app/tray");
