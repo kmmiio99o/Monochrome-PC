@@ -67,7 +67,10 @@ export function syncWebviewState(): void {
     rpcButton2Url: s.button2Url,
     rpcConnected: state.discordConnected,
   };
-  const script = 'window.__electronSettingsSync=' + JSON.stringify(payload) + ';(function(){var s=window.__electronSettingsSync;var c=function(id,v){var el=document.getElementById(id);if(el&&el.type==="checkbox")el.checked=v};var se=function(id,v){var el=document.getElementById(id);if(el&&el.tagName==="SELECT")el.value=v};var ti=function(id,v){var el=document.getElementById(id);if(el&&el.type==="text")el.value=v};c("electron-navbar-toggle",s.showNavigationBar);c("electron-closetotray-toggle",s.closeToTray);c("electron-rpc-toggle",s.rpcEnabled);c("electron-rpc-title-toggle",s.rpcShowTitle);c("electron-rpc-artist-toggle",s.rpcShowArtist);c("electron-rpc-idle-toggle",s.rpcShowOnIdle);c("electron-rpc-pause-toggle",s.rpcShowOnPause);c("electron-rpc-timestamp-toggle",s.rpcShowTimestamp);se("electron-rpc-activity-type",s.rpcActivityType);ti("electron-rpc-custom-details",s.rpcCustomDetails||"");ti("electron-rpc-large-image-text",s.rpcLargeImageText||"");ti("electron-rpc-small-image-key",s.rpcSmallImageKey||"");ti("electron-rpc-small-image-text",s.rpcSmallImageText||"");ti("electron-rpc-button1-label",s.rpcButton1Label||"");ti("electron-rpc-button1-url",s.rpcButton1Url||"");ti("electron-rpc-button2-label",s.rpcButton2Label||"");ti("electron-rpc-button2-url",s.rpcButton2Url||"");var st=document.getElementById("electron-rpc-status");if(st)st.textContent=s.rpcConnected?"Connected":"Disconnected";})()';
+  const script =
+    "window.__electronSettingsSync=" +
+    JSON.stringify(payload) +
+    ';(function(){var s=window.__electronSettingsSync;var c=function(id,v){var el=document.getElementById(id);if(el&&el.type==="checkbox")el.checked=v};var se=function(id,v){var el=document.getElementById(id);if(el&&el.tagName==="SELECT")el.value=v};var ti=function(id,v){var el=document.getElementById(id);if(el&&el.type==="text")el.value=v};c("electron-navbar-toggle",s.showNavigationBar);c("electron-closetotray-toggle",s.closeToTray);c("electron-rpc-toggle",s.rpcEnabled);c("electron-rpc-title-toggle",s.rpcShowTitle);c("electron-rpc-artist-toggle",s.rpcShowArtist);c("electron-rpc-idle-toggle",s.rpcShowOnIdle);c("electron-rpc-pause-toggle",s.rpcShowOnPause);c("electron-rpc-timestamp-toggle",s.rpcShowTimestamp);se("electron-rpc-activity-type",s.rpcActivityType);ti("electron-rpc-custom-details",s.rpcCustomDetails||"");ti("electron-rpc-large-image-text",s.rpcLargeImageText||"");ti("electron-rpc-small-image-key",s.rpcSmallImageKey||"");ti("electron-rpc-small-image-text",s.rpcSmallImageText||"");ti("electron-rpc-button1-label",s.rpcButton1Label||"");ti("electron-rpc-button1-url",s.rpcButton1Url||"");ti("electron-rpc-button2-label",s.rpcButton2Label||"");ti("electron-rpc-button2-url",s.rpcButton2Url||"");var st=document.getElementById("electron-rpc-status");if(st)st.textContent=s.rpcConnected?"Connected":"Disconnected";})()';
   state.webviewWC.executeJavaScript(script).catch(() => {});
 }
 
@@ -83,79 +86,81 @@ function handleSettingsMessage(msg: string): void {
     case "closeToTray":
       state.closeToTray = payload === "1";
       break;
-      case "rpc": {
-        const [sub, val] = payload.includes(":") ? [payload.slice(0, payload.indexOf(":")), payload.slice(payload.indexOf(":") + 1)] : [payload, ""];
-        switch (sub) {
-          case "toggle":
-            state.rpcSettings.enabled = !state.rpcSettings.enabled;
-            _onRpcChanged?.();
-            break;
-          case "showTitle":
-            state.rpcSettings.showTitle = val === "1";
-            _onRpcChanged?.();
-            break;
-          case "showArtist":
-            state.rpcSettings.showArtist = val === "1";
-            _onRpcChanged?.();
-            break;
-          case "showOnIdle":
-            state.rpcSettings.showOnIdle = val === "1";
-            _onRpcChanged?.();
-            break;
-          case "showOnPause":
-            state.rpcSettings.showOnPause = val === "1";
-            _onRpcChanged?.();
-            break;
-          case "showTimestamp":
-            state.rpcSettings.showTimestamp = val === "1";
-            _onRpcChanged?.();
-            break;
-          case "activityType":
-            state.rpcSettings.activityType = Number(val);
-            _onRpcChanged?.();
-            break;
-          case "customDetails":
-            state.rpcSettings.customDetails = decodeURIComponent(val);
-            _onRpcChanged?.();
-            break;
-          case "largeImageText":
-            state.rpcSettings.largeImageText = decodeURIComponent(val);
-            _onRpcChanged?.();
-            break;
-          case "smallImageKey":
-            state.rpcSettings.smallImageKey = decodeURIComponent(val);
-            _onRpcChanged?.();
-            break;
-          case "smallImageText":
-            state.rpcSettings.smallImageText = decodeURIComponent(val);
-            _onRpcChanged?.();
-            break;
-          case "button1Label":
-            state.rpcSettings.button1Label = decodeURIComponent(val);
-            _onRpcChanged?.();
-            break;
-          case "button1Url":
-            state.rpcSettings.button1Url = decodeURIComponent(val);
-            _onRpcChanged?.();
-            break;
-          case "button2Label":
-            state.rpcSettings.button2Label = decodeURIComponent(val);
-            _onRpcChanged?.();
-            break;
-          case "button2Url":
-            state.rpcSettings.button2Url = decodeURIComponent(val);
-            _onRpcChanged?.();
-            break;
-          case "customStatus":
-            state.rpcSettings.customStatus = decodeURIComponent(val);
-            _onRpcChanged?.();
-            break;
-          case "reconnect":
-            void import("../discord/client").then((m) => m.reconnectDiscordRpc());
-            break;
-        }
-        break;
+    case "rpc": {
+      const [sub, val] = payload.includes(":")
+        ? [payload.slice(0, payload.indexOf(":")), payload.slice(payload.indexOf(":") + 1)]
+        : [payload, ""];
+      switch (sub) {
+        case "toggle":
+          state.rpcSettings.enabled = !state.rpcSettings.enabled;
+          _onRpcChanged?.();
+          break;
+        case "showTitle":
+          state.rpcSettings.showTitle = val === "1";
+          _onRpcChanged?.();
+          break;
+        case "showArtist":
+          state.rpcSettings.showArtist = val === "1";
+          _onRpcChanged?.();
+          break;
+        case "showOnIdle":
+          state.rpcSettings.showOnIdle = val === "1";
+          _onRpcChanged?.();
+          break;
+        case "showOnPause":
+          state.rpcSettings.showOnPause = val === "1";
+          _onRpcChanged?.();
+          break;
+        case "showTimestamp":
+          state.rpcSettings.showTimestamp = val === "1";
+          _onRpcChanged?.();
+          break;
+        case "activityType":
+          state.rpcSettings.activityType = Number(val);
+          _onRpcChanged?.();
+          break;
+        case "customDetails":
+          state.rpcSettings.customDetails = decodeURIComponent(val);
+          _onRpcChanged?.();
+          break;
+        case "largeImageText":
+          state.rpcSettings.largeImageText = decodeURIComponent(val);
+          _onRpcChanged?.();
+          break;
+        case "smallImageKey":
+          state.rpcSettings.smallImageKey = decodeURIComponent(val);
+          _onRpcChanged?.();
+          break;
+        case "smallImageText":
+          state.rpcSettings.smallImageText = decodeURIComponent(val);
+          _onRpcChanged?.();
+          break;
+        case "button1Label":
+          state.rpcSettings.button1Label = decodeURIComponent(val);
+          _onRpcChanged?.();
+          break;
+        case "button1Url":
+          state.rpcSettings.button1Url = decodeURIComponent(val);
+          _onRpcChanged?.();
+          break;
+        case "button2Label":
+          state.rpcSettings.button2Label = decodeURIComponent(val);
+          _onRpcChanged?.();
+          break;
+        case "button2Url":
+          state.rpcSettings.button2Url = decodeURIComponent(val);
+          _onRpcChanged?.();
+          break;
+        case "customStatus":
+          state.rpcSettings.customStatus = decodeURIComponent(val);
+          _onRpcChanged?.();
+          break;
+        case "reconnect":
+          void import("../discord/client").then((m) => m.reconnectDiscordRpc());
+          break;
       }
+      break;
+    }
     case "sync": {
       syncWebviewState();
       break;

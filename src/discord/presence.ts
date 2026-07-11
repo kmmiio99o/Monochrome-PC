@@ -15,9 +15,7 @@ export function updateDiscordPresence(): void {
       setPresence({
         type: state.rpcSettings.activityType,
         instance: false,
-        state: state.rpcSettings.customStatus
-          ? resolveVars(state.rpcSettings.customStatus).substring(0, 128)
-          : "Idle",
+        state: state.rpcSettings.customStatus ? resolveVars(state.rpcSettings.customStatus).substring(0, 128) : "Idle",
       });
     } else {
       clearDiscordPresence();
@@ -43,19 +41,16 @@ export function updateDiscordPresence(): void {
     const activity: Record<string, unknown> = {
       details,
       largeImageKey: state.currentTrack.albumArt || undefined,
-      largeImageText:
-        s.largeImageText
-          ? resolveVars(s.largeImageText)
-          : (state.isPlaying ? "" : "\u23F8 ") +
-            state.currentTrack.title +
-            (state.currentTrack.artist ? " \u2014 " + state.currentTrack.artist : ""),
+      largeImageText: s.largeImageText
+        ? resolveVars(s.largeImageText)
+        : (state.isPlaying ? "" : "\u23F8 ") +
+          state.currentTrack.title +
+          (state.currentTrack.artist ? " \u2014 " + state.currentTrack.artist : ""),
       type: s.activityType,
       instance: false,
     };
 
-    const activityState = s.customStatus
-      ? resolveVars(s.customStatus).substring(0, 128)
-      : artistState;
+    const activityState = s.customStatus ? resolveVars(s.customStatus).substring(0, 128) : artistState;
     if (activityState) activity.state = activityState;
 
     if (s.smallImageKey) {
