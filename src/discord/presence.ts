@@ -8,13 +8,9 @@ export function updateDiscordPresence(): void {
   }
 
   try {
-    const details = state.rpcSettings.showTitle
-      ? state.currentTrack.title.substring(0, 128)
-      : undefined;
+    const details = state.rpcSettings.showTitle ? state.currentTrack.title.substring(0, 128) : undefined;
 
-    const artistState = state.rpcSettings.showArtist
-      ? state.currentTrack.artist.substring(0, 128)
-      : undefined;
+    const artistState = state.rpcSettings.showArtist ? state.currentTrack.artist.substring(0, 128) : undefined;
 
     const activity: Record<string, unknown> = {
       details,

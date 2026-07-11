@@ -9,13 +9,7 @@ export function execInPage(js: string): void {
 }
 
 export function sendNotification(track: TrackInfo): void {
-  if (
-    !state.mainWindow ||
-    state.mainWindow.isDestroyed() ||
-    !track ||
-    track.title === "Not Playing"
-  )
-    return;
+  if (!state.mainWindow || state.mainWindow.isDestroyed() || !track || track.title === "Not Playing") return;
 
   try {
     state.mainWindow.webContents.send("show-toast", track);

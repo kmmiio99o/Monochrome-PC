@@ -1,8 +1,6 @@
 import * as path from "path";
 import * as fs from "fs";
 import { app } from "electron";
-import { RpcSettings } from "../types";
-import { DEFAULT_RPC_SETTINGS } from "../config";
 import { state } from "../state";
 
 function settingsPath(): string {

@@ -1,4 +1,3 @@
-import * as path from "path";
 import { RpcSettings, DiscordActivity } from "./types";
 
 export const DISCORD_CLIENT_ID = "1524834746486489300";

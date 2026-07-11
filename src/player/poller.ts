@@ -45,10 +45,8 @@ function pollOnce(): void {
         const data = JSON.parse(result) as PollResult;
         if (!data) return;
 
-        const trackKey =
-          data.track.title + "|" + data.track.artist;
-        const currentKey =
-          state.currentTrack.title + "|" + state.currentTrack.artist;
+        const trackKey = data.track.title + "|" + data.track.artist;
+        const currentKey = state.currentTrack.title + "|" + state.currentTrack.artist;
 
         if (trackKey !== currentKey) {
           state.currentTrack = data.track;

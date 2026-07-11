@@ -38,11 +38,7 @@ if (!gotLock) {
 
   if (process.defaultApp) {
     if (process.argv.length >= 2) {
-      app.setAsDefaultProtocolClient(
-        "monochrome-player",
-        process.execPath,
-        [require("path").resolve(process.argv[1])],
-      );
+      app.setAsDefaultProtocolClient("monochrome-player", process.execPath, [require("path").resolve(process.argv[1])]);
     }
   } else {
     app.setAsDefaultProtocolClient("monochrome-player");

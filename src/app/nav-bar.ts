@@ -2,11 +2,16 @@ export const BAR_HEIGHT = 38;
 
 const SVG = {
   back: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>',
-  forward: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>',
-  reload: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-9-9"/><path d="M21 3v5h-5"/></svg>',
-  minimize: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/></svg>',
-  maximize: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2"/></svg>',
-  close: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>',
+  forward:
+    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>',
+  reload:
+    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-9-9"/><path d="M21 3v5h-5"/></svg>',
+  minimize:
+    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/></svg>',
+  maximize:
+    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2"/></svg>',
+  close:
+    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>',
 };
 
 export function getShellHTML(showWindowControls: boolean): string {
@@ -54,10 +59,14 @@ var bar=document.getElementById('bar');
 document.getElementById('back-btn').onclick=function(){w.goBack()};
 document.getElementById('forward-btn').onclick=function(){w.goForward()};
 document.getElementById('reload-btn').onclick=function(){w.reload()};
-${showWindowControls ? `
+${
+  showWindowControls
+    ? `
 document.getElementById('min-btn').onclick=function(){window.electronNav?.minimize()};
 document.getElementById('max-btn').onclick=function(){window.electronNav?.maximize()};
-document.getElementById('close-btn').onclick=function(){window.electronNav?.close()};` : ""}
+document.getElementById('close-btn').onclick=function(){window.electronNav?.close()};`
+    : ""
+}
 w.addEventListener('did-navigate',function(){document.title=w.getTitle()||'Monochrome Player'});
 w.addEventListener('page-title-updated',function(e){document.title=e.title||'Monochrome Player'});
 window.electronNav?.onToggle(function(visible){

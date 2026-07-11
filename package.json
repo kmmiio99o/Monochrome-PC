@@ -7,17 +7,27 @@
   "main": "dist-electron/main.js",
   "scripts": {
     "build:ts": "tsc",
-    "start": "tsc && electron . --trace-deprecation",
-    "build": "tsc && electron-builder"
+    "start": "tsc && electron . --no-deprecation",
+    "build": "tsc && electron-builder",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "check": "tsc && eslint ."
   },
   "dependencies": {
     "discord-rpc": "^4.0.1",
     "punycode": "^2.3.1"
   },
   "devDependencies": {
+    "@eslint/js": "^10.0.1",
     "electron": "^43.1.0",
     "electron-builder": "^26.15.3",
-    "typescript": "^7.0.2"
+    "eslint": "^10.7.0",
+    "eslint-config-prettier": "^10.1.8",
+    "globals": "^17.7.0",
+    "prettier": "^3.9.5",
+    "typescript": "6.0.3",
+    "typescript-eslint": "^8.63.0"
   },
   "build": {
     "appId": "tf.monochrome.player",

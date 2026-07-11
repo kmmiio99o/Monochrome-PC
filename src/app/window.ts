@@ -3,7 +3,7 @@ import { BrowserWindow, dialog } from "electron";
 import { state } from "../state";
 import { WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_MIN_WIDTH, WINDOW_MIN_HEIGHT } from "../config";
 import { startPlayerPolling, stopPlayerPolling } from "../player/poller";
-import { getShellHTML, BAR_HEIGHT } from "./nav-bar";
+import { getShellHTML } from "./nav-bar";
 
 export async function updateNavBar(): Promise<void> {
   const next = !state.showNavigationBar;

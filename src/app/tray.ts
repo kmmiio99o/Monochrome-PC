@@ -9,10 +9,7 @@ import { updateNavBar } from "./window";
 let _onRpcChanged: (() => void) | null = null;
 let _promptCustomStatus: (() => void) | null = null;
 
-export function createTray(
-  onRpcChanged: () => void,
-  promptCustomStatus: () => void,
-): void {
+export function createTray(onRpcChanged: () => void, promptCustomStatus: () => void): void {
   _onRpcChanged = onRpcChanged;
   _promptCustomStatus = promptCustomStatus;
 
@@ -49,8 +46,7 @@ function rebuildTrayMenu(): void {
 
   const nowPlaying =
     state.isPlaying && state.currentTrack.title !== "Not Playing"
-      ? state.currentTrack.title +
-        (state.currentTrack.artist ? " \u2014 " + state.currentTrack.artist : "")
+      ? state.currentTrack.title + (state.currentTrack.artist ? " \u2014 " + state.currentTrack.artist : "")
       : null;
 
   const template: Electron.MenuItemConstructorOptions[] = [];
@@ -64,98 +60,98 @@ function rebuildTrayMenu(): void {
   }
 
   template.push(
-      {
-        label: state.isPlaying ? "Pause" : "Play",
-        click: () => playPause(),
+    {
+      label: state.isPlaying ? "Pause" : "Play",
+      click: () => playPause(),
+    },
+    { label: "Next Track", click: () => nextTrack() },
+    { label: "Previous Track", click: () => prevTrack() },
+    { type: "separator" },
+    {
+      label: "Show Window",
+      click: () => {
+        if (state.mainWindow) {
+          state.mainWindow.show();
+          state.mainWindow.focus();
+        }
       },
-      { label: "Next Track", click: () => nextTrack() },
-      { label: "Previous Track", click: () => prevTrack() },
-      { type: "separator" },
-      {
-        label: "Show Window",
-        click: () => {
-          if (state.mainWindow) {
-            state.mainWindow.show();
-            state.mainWindow.focus();
-          }
+    },
+    { type: "separator" },
+    {
+      label: "Discord RPC " + (state.discordConnected ? "\u2713" : "\u274c"),
+      submenu: [
+        {
+          label: "Enable Rich Presence",
+          type: "checkbox",
+          checked: state.rpcSettings.enabled,
+          click: () => {
+            state.rpcSettings.enabled = !state.rpcSettings.enabled;
+            _onRpcChanged?.();
+          },
         },
-      },
-      { type: "separator" },
-      {
-        label: "Discord RPC " + (state.discordConnected ? "\u2713" : "\u274c"),
-        submenu: [
-          {
-            label: "Enable Rich Presence",
-            type: "checkbox",
-            checked: state.rpcSettings.enabled,
-            click: () => {
-              state.rpcSettings.enabled = !state.rpcSettings.enabled;
-              _onRpcChanged?.();
-            },
+        { type: "separator" },
+        {
+          label: "Show Track Title",
+          type: "checkbox",
+          checked: state.rpcSettings.showTitle,
+          click: () => {
+            state.rpcSettings.showTitle = !state.rpcSettings.showTitle;
+            _onRpcChanged?.();
           },
-          { type: "separator" },
-          {
-            label: "Show Track Title",
-            type: "checkbox",
-            checked: state.rpcSettings.showTitle,
-            click: () => {
-              state.rpcSettings.showTitle = !state.rpcSettings.showTitle;
-              _onRpcChanged?.();
-            },
-          },
-          {
-            label: "Show Artist",
-            type: "checkbox",
-            checked: state.rpcSettings.showArtist,
-            click: () => {
-              state.rpcSettings.showArtist = !state.rpcSettings.showArtist;
-              _onRpcChanged?.();
-            },
-          },
-          { type: "separator" },
-          {
-            label: state.rpcSettings.customStatus
-              ? 'Status: \u201c' + state.rpcSettings.customStatus.substring(0, 30) + '\u201d'
-              : "Set Custom Status...",
-            click: () => _promptCustomStatus?.(),
-          },
-          {
-            label: "Clear Custom Status",
-            enabled: !!state.rpcSettings.customStatus,
-            click: () => {
-              state.rpcSettings.customStatus = "";
-              _onRpcChanged?.();
-            },
-          },
-        ],
-      },
-      { type: "separator" },
-      {
-        label: "Show Navigation Bar",
-        type: "checkbox",
-        checked: state.showNavigationBar,
-        click: async () => {
-          await updateNavBar();
-          saveSettings();
-          rebuildTrayMenu();
         },
-      },
-      { type: "separator" },
-      {
-        label: "Close to Tray",
-        type: "checkbox",
-        checked: state.closeToTray,
-        click: () => {
-          state.closeToTray = !state.closeToTray;
+        {
+          label: "Show Artist",
+          type: "checkbox",
+          checked: state.rpcSettings.showArtist,
+          click: () => {
+            state.rpcSettings.showArtist = !state.rpcSettings.showArtist;
+            _onRpcChanged?.();
+          },
         },
-      },
-      {
-        label: "Quit",
-        click: () => {
-          state.isQuitting = true;
-          app.quit();
+        { type: "separator" },
+        {
+          label: state.rpcSettings.customStatus
+            ? "Status: \u201c" + state.rpcSettings.customStatus.substring(0, 30) + "\u201d"
+            : "Set Custom Status...",
+          click: () => _promptCustomStatus?.(),
         },
+        {
+          label: "Clear Custom Status",
+          enabled: !!state.rpcSettings.customStatus,
+          click: () => {
+            state.rpcSettings.customStatus = "";
+            _onRpcChanged?.();
+          },
+        },
+      ],
+    },
+    { type: "separator" },
+    {
+      label: "Show Navigation Bar",
+      type: "checkbox",
+      checked: state.showNavigationBar,
+      click: async () => {
+        await updateNavBar();
+        saveSettings();
+        rebuildTrayMenu();
       },
+    },
+    { type: "separator" },
+    {
+      label: "Close to Tray",
+      type: "checkbox",
+      checked: state.closeToTray,
+      click: () => {
+        state.closeToTray = !state.closeToTray;
+      },
+    },
+    {
+      label: "Quit",
+      click: () => {
+        state.isQuitting = true;
+        app.quit();
+      },
+    },
   );
   state.tray.setContextMenu(Menu.buildFromTemplate(template));
 }
