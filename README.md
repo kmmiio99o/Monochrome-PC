@@ -65,6 +65,7 @@ Download the `monochrome-player-*.pacman` package from the [latest release](http
 ```
 sudo pacman -U monochrome-player-*.pacman
 ```
+
 </details>
 
 <details>
@@ -75,6 +76,7 @@ Download the `monochrome-player_*.deb` package from the [latest release](https:/
 ```
 sudo dpkg -i monochrome-player_*.deb
 ```
+
 </details>
 
 <details>
@@ -85,6 +87,7 @@ Download the `monochrome-player-*.rpm` package from the [latest release](https:/
 ```
 sudo rpm -i monochrome-player-*.rpm
 ```
+
 </details>
 
 <details>
@@ -103,6 +106,7 @@ Or add to your flake:
   };
 }
 ```
+
 </details>
 
 <details>
@@ -113,6 +117,7 @@ Download the `monochrome-player-*.rpm` package from the [latest release](https:/
 ```
 sudo zypper install monochrome-player-*.rpm
 ```
+
 </details>
 
 <details>
@@ -124,6 +129,7 @@ Download `monochrome-player-*.AppImage` from the [latest release](https://github
 chmod +x monochrome-player-*.AppImage
 ./monochrome-player-*.AppImage
 ```
+
 </details>
 
 ### Windows
@@ -135,6 +141,7 @@ Download the `monochrome-player-Setup-*.exe` (NSIS installer) or `monochrome-pla
 
 - **Installer**: Run the `.exe` and follow the setup wizard.
 - **Portable**: Extract and run `Monochrome Player.exe`.
+
 </details>
 
 ### macOS
@@ -158,6 +165,7 @@ cd Monochrome-PC
 bun install
 bun run start
 ```
+
 </details>
 
 ## Building
