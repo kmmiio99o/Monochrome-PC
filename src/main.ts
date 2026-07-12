@@ -50,8 +50,6 @@ if (!gotLock) {
 
   registerIpcHandlers(onRpcChanged);
 
-  app.commandLine.appendSwitch("disable-blink-features", "AutomationControlled");
-
   app.whenReady().then(async () => {
     protocol.handle("mono", (request) => {
       const url = new URL(request.url);

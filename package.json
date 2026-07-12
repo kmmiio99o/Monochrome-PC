@@ -8,12 +8,13 @@
   "scripts": {
     "sync-version": "bun scripts/sync-version.ts",
     "build:ts": "tsc",
-    "start": "tsc && electron . --no-deprecation",
+    "start": "electron .",
     "build": "tsc && electron-builder",
     "lint": "eslint .",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "check": "tsc && eslint ."
+    "check": "tsc && eslint .",
+    "validate": "prettier --check . && tsc && eslint ."
   },
   "dependencies": {
     "discord-rpc": "^4.0.1",

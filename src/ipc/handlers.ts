@@ -9,10 +9,6 @@ app.on("web-contents-created", (_event, contents) => {
   if (contents.getType() !== "webview") return;
   state.webviewWC = contents;
 
-  contents.setUserAgent(
-    "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
-  );
-
   contents.session.setPermissionRequestHandler((_wc, _permission, callback) => {
     callback(true);
   });
