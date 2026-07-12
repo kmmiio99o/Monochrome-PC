@@ -1,5 +1,5 @@
 export function INJECT_SETTINGS_TAB(version: string): string {
-return `
+  return `
 (function(){
   if (document.getElementById('settings-tab-electron-app')) return;
   var sel=document.querySelector('.settings-tabs');
