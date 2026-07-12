@@ -4,7 +4,7 @@ const prettierConfig = require("eslint-config-prettier");
 const globals = require("globals");
 
 module.exports = tseslint.config(
-  { ignores: ["**/dist/**", "**/dist-electron/**", "**/node_modules/**", "**/monochrome/**"] },
+  { ignores: ["**/dist/**", "**/dist-electron/**", "**/node_modules/**", "**/monochrome/**", "**/scripts/**"] },
   js.configs.recommended,
   prettierConfig,
   ...tseslint.configs.recommended,

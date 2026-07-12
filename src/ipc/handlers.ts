@@ -1,6 +1,7 @@
 import { ipcMain, app, shell } from "electron";
 import { state } from "../state";
 import { INJECT_SETTINGS_TAB } from "../inject/settings-tab";
+import { APP_VERSION } from "../config";
 
 let _onRpcChanged: (() => void) | null = null;
 
@@ -41,7 +42,7 @@ app.on("web-contents-created", (_event, contents) => {
 
 export function injectSettingsTab(): void {
   if (!state.webviewWC || state.webviewWC.isDestroyed()) return;
-  state.webviewWC.executeJavaScript(INJECT_SETTINGS_TAB).catch(() => {});
+  state.webviewWC.executeJavaScript(INJECT_SETTINGS_TAB(APP_VERSION)).catch(() => {});
 }
 
 export function syncWebviewState(): void {

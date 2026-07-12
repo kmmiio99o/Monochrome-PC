@@ -1,4 +1,5 @@
-export const INJECT_SETTINGS_TAB = `
+export function INJECT_SETTINGS_TAB(version: string): string {
+return `
 (function(){
   if (document.getElementById('settings-tab-electron-app')) return;
   var sel=document.querySelector('.settings-tabs');
@@ -98,7 +99,7 @@ export const INJECT_SETTINGS_TAB = `
   '<div id="electron-about-modal" style="background:#141414;border:1px solid #2a2a2a;border-radius:8px;padding:24px;max-width:360px;width:88%;text-align:center;transform:scale(.95);transition:transform .25s;box-shadow:0 25px 50px -12px rgba(0,0,0,.25)">'+
   '<img src="mono://icon" width="64" height="64" style="border-radius:12px;margin:0 auto 16px;display:block">'+
   '<div style="font-size:17px;font-weight:600;color:#f5f5f5;margin-bottom:2px">Monochrome Player</div>'+
-  '<div style="font-size:13px;color:#a0a0a0;margin-bottom:16px">Version 1.0.0</div>'+
+  '<div style="font-size:13px;color:#a0a0a0;margin-bottom:16px">Version ${version}</div>'+
   '<div style="font-size:13px;color:#a0a0a0;line-height:1.5;margin-bottom:20px">Electron desktop wrapper for the Monochrome music player web app.</div>'+
   '<div style="display:flex;flex-direction:column;gap:8px;margin-bottom:20px">'+
   '<a href="https://github.com/kmmiio99o/Monochrome-PC" target="_blank" style="color:#e0e0e0;text-decoration:none;font-size:13px;padding:10px;border-radius:8px;background:#1f1f1f;font-weight:500">GitHub Repository ↗</a>'+
@@ -149,3 +150,4 @@ export const INJECT_SETTINGS_TAB = `
   c('sync:request');
 })();
 `;
+}

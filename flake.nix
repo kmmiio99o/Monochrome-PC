@@ -13,7 +13,7 @@
 
         monochrome-player = pkgs.stdenv.mkDerivation {
           pname = "monochrome-player";
-          version = "1.0.0";
+          version = "1.1.0";
 
           src = self;
 

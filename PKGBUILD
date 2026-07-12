@@ -1,7 +1,7 @@
 # Maintainer: kmmiio99o <kmmiio99o@users.noreply.github.com>
 
 pkgname=monochrome-player-bin
-pkgver=1.0.0
+pkgver=1.1.0
 pkgrel=1
 pkgdesc="A minimalist desktop wrapper for monochrome.tf with Discord Rich Presence, tray controls, and media keys."
 arch=("x86_64")

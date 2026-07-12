@@ -1,4 +1,8 @@
+import * as fs from "fs";
+import * as path from "path";
 import { RpcSettings } from "./types";
+
+export const APP_VERSION = fs.readFileSync(path.join(__dirname, "..", "VERSION"), "utf8").trim();
 
 export const DISCORD_CLIENT_ID = "1524834746486489300";
 
