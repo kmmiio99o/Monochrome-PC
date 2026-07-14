@@ -52,3 +52,25 @@ export interface DiscordClient {
   on(event: string, listener: (...args: unknown[]) => void): this;
   removeAllListeners(event?: string): this;
 }
+
+export interface PluginManifest {
+  id: string;
+  name: string;
+  version: string;
+  author: string;
+  description: string;
+  icon?: string;
+  main: string;
+  permissions?: string[];
+}
+
+export interface StoredPlugin {
+  id: string;
+  name: string;
+  version: string;
+  author: string;
+  description: string;
+  url?: string;
+  manifestPath?: string;
+  enabled: boolean;
+}

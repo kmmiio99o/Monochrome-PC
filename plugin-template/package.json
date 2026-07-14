@@ -1,0 +1,13 @@
+{
+  "name": "monochrome-plugin-template",
+  "version": "1.0.0",
+  "description": "Template for creating Monochrome Player plugins",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc --watch"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0"
+  }
+}

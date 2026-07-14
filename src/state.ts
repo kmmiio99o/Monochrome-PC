@@ -1,5 +1,5 @@
 import { BrowserWindow, Tray, WebContents } from "electron";
-import { RpcSettings, TrackInfo, DiscordClient } from "./types";
+import { RpcSettings, TrackInfo, DiscordClient, StoredPlugin } from "./types";
 import { DEFAULT_RPC_SETTINGS, DEFAULT_SHOW_NAV_BAR } from "./config";
 import { isTilingWM } from "./environment";
 
@@ -18,4 +18,6 @@ export const state = {
   isQuitting: false,
   showNavigationBar: DEFAULT_SHOW_NAV_BAR,
   isTilingWM: isTilingWM(),
+  plugins: [] as StoredPlugin[],
+  appVersion: "",
 };

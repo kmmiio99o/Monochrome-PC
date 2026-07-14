@@ -8,13 +8,15 @@
   "scripts": {
     "sync-version": "bun scripts/sync-version.ts",
     "build:ts": "tsc",
+    "build:bundle": "esbuild bundle/index.ts --bundle --format=iife --target=es2020 --outfile=dist-bundle/index.js --platform=browser",
+    "build:all": "tsc && esbuild bundle/index.ts --bundle --format=iife --target=es2020 --outfile=dist-bundle/index.js --platform=browser",
     "start": "electron .",
-    "build": "tsc && electron-builder",
+    "build": "tsc && esbuild bundle/index.ts --bundle --format=iife --target=es2020 --outfile=dist-bundle/index.js --platform=browser && electron-builder",
     "lint": "eslint .",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "check": "tsc && eslint .",
-    "validate": "prettier --check . && tsc && eslint ."
+    "check": "tsc && esbuild bundle/index.ts --bundle --format=iife --target=es2020 --outfile=/dev/null --platform=browser && eslint .",
+    "validate": "prettier --check . && tsc && esbuild bundle/index.ts --bundle --format=iife --target=es2020 --outfile=/dev/null --platform=browser && eslint ."
   },
   "dependencies": {
     "discord-rpc": "^4.0.1",
@@ -24,6 +26,7 @@
     "@eslint/js": "^10.0.1",
     "electron": "^43.1.0",
     "electron-builder": "^26.15.3",
+    "esbuild": "^0.28.1",
     "eslint": "^10.7.0",
     "eslint-config-prettier": "^10.1.8",
     "globals": "^17.7.0",
@@ -37,6 +40,7 @@
     "files": [
       "dist-electron/**/*.js",
       "dist-electron/**/*.json",
+      "dist-bundle/**/*.js",
       "assets/**/*"
     ],
     "extraResources": [],

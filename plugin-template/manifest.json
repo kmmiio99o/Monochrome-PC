@@ -1,0 +1,9 @@
+{
+  "id": "my-example-plugin",
+  "name": "My Example Plugin",
+  "version": "1.0.0",
+  "author": "Your Name",
+  "description": "A sample plugin that demonstrates the Monochrome Player plugin API.",
+  "main": "index.js",
+  "permissions": ["storage", "ui", "ipc"]
+}

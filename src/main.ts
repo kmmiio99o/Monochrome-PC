@@ -2,6 +2,7 @@ import { app, protocol, net } from "electron";
 import * as path from "path";
 import { state } from "./state";
 import { loadSettings, saveSettings } from "./settings/store";
+import { loadPlugins } from "./inject/bundle";
 import { createWindow } from "./app/window";
 import { createTray, updateTray } from "./app/tray";
 import { registerMediaKeys, unregisterMediaKeys } from "./app/media-keys";
@@ -60,6 +61,7 @@ if (!gotLock) {
     });
 
     loadSettings();
+    state.plugins = loadPlugins();
     createWindow();
     createTray();
     registerMediaKeys();
