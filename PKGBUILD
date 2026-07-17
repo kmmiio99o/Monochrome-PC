@@ -25,10 +25,11 @@ package() {
   cd "$srcdir/Monochrome-PC-$pkgver"
 
   install -dm755 "$pkgdir/usr/lib/monochrome-player"
-  cp -r dist-electron "$pkgdir/usr/lib/monochrome-player/"
-  cp -r assets "$pkgdir/usr/lib/monochrome-player/"
-  cp -r node_modules "$pkgdir/usr/lib/monochrome-player/"
-  cp package.json "$pkgdir/usr/lib/monochrome-player/"
+    cp -r dist-electron "$pkgdir/usr/lib/monochrome-player/"
+    cp -r assets "$pkgdir/usr/lib/monochrome-player/"
+    cp -r node_modules "$pkgdir/usr/lib/monochrome-player/"
+    cp package.json "$pkgdir/usr/lib/monochrome-player/"
+    cp VERSION "$pkgdir/usr/lib/monochrome-player/"
 
   install -dm755 "$pkgdir/usr/bin"
   cat > "$pkgdir/usr/bin/monochrome-player" << EOF
