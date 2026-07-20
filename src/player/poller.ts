@@ -39,8 +39,9 @@ const POLL_SCRIPT = `
 
 function pollOnce(): void {
   if (!state.mainWindow || state.mainWindow.isDestroyed()) return;
+  if (!state.webviewWC || state.webviewWC.isDestroyed()) return;
 
-  state.mainWindow.webContents
+  state.webviewWC
     .executeJavaScript(POLL_SCRIPT)
     .then((result: string) => {
       try {

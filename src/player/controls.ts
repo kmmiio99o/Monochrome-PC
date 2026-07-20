@@ -3,8 +3,8 @@ import { PLAY_PAUSE_JS, NEXT_JS, PREV_JS } from "../config";
 import { TrackInfo } from "../types";
 
 export function execInPage(js: string): void {
-  if (state.mainWindow && !state.mainWindow.isDestroyed()) {
-    state.mainWindow.webContents.executeJavaScript(js).catch(() => {});
+  if (state.webviewWC && !state.webviewWC.isDestroyed()) {
+    state.webviewWC.executeJavaScript(js).catch(() => {});
   }
 }
 

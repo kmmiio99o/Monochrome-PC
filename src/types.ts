@@ -45,7 +45,7 @@ export interface DiscordActivity {
 }
 
 export interface DiscordClient {
-  login(options: { clientId: string }): Promise<void>;
+  login(options: { clientId: string }): Promise<DiscordClient>;
   setActivity(args: DiscordActivity, pid?: number): Promise<unknown>;
   clearActivity(pid?: number): Promise<unknown>;
   destroy(): Promise<void>;

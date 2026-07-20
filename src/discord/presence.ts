@@ -1,5 +1,7 @@
 import { state } from "../state";
 
+const SET_ACTIVITY = "SET_ACTIVITY";
+
 function resolveVars(text: string): string {
   return text
     .replace(/\{song_name\}/g, state.currentTrack.title)
@@ -7,15 +9,35 @@ function resolveVars(text: string): string {
     .replace(/\{status\}/g, state.isPlaying ? "Playing" : "Paused");
 }
 
+function buildTimestamps(
+  startTimestamp?: number,
+  endTimestamp?: number,
+): { start?: number; end?: number } | undefined {
+  if (!startTimestamp && !endTimestamp) return undefined;
+  return { start: startTimestamp, end: endTimestamp };
+}
+
+function sendActivity(activity: Record<string, unknown>): void {
+  if (!state.discordRpc) return;
+  const pid = process.pid;
+  // discord-rpc Client has request() at runtime but it's not in the type definitions
+  const rpc = state.discordRpc as unknown as { request: (cmd: string, args: Record<string, unknown>) => Promise<unknown> };
+  rpc
+    .request(SET_ACTIVITY, { pid, activity })
+    .catch(() => {});
+}
+
 export function updateDiscordPresence(): void {
   if (!state.discordRpc || !state.rpcSettings.enabled || !state.discordConnected) return;
 
   if (state.currentTrack.title === "Not Playing") {
     if (state.rpcSettings.showOnIdle) {
-      setPresence({
+      sendActivity({
         type: state.rpcSettings.activityType,
         instance: false,
-        state: state.rpcSettings.customStatus ? resolveVars(state.rpcSettings.customStatus).substring(0, 128) : "Idle",
+        state: state.rpcSettings.customStatus
+          ? resolveVars(state.rpcSettings.customStatus).substring(0, 128)
+          : "Idle",
       });
     } else {
       clearDiscordPresence();
@@ -36,53 +58,53 @@ export function updateDiscordPresence(): void {
         ? state.currentTrack.title.substring(0, 128)
         : undefined;
 
-    const artistState = s.showArtist ? state.currentTrack.artist.substring(0, 128) : undefined;
+    const artistState = s.showArtist
+      ? state.currentTrack.artist.substring(0, 128)
+      : undefined;
 
-    const activity: Record<string, unknown> = {
-      details,
-      largeImageKey: state.currentTrack.albumArt || undefined,
-      largeImageText: s.largeImageText
-        ? resolveVars(s.largeImageText)
-        : (state.isPlaying ? "" : "\u23F8 ") +
-          state.currentTrack.title +
-          (state.currentTrack.artist ? " \u2014 " + state.currentTrack.artist : ""),
-      type: s.activityType,
-      instance: false,
-    };
-
-    const activityState = s.customStatus ? resolveVars(s.customStatus).substring(0, 128) : artistState;
-    if (activityState) activity.state = activityState;
-
+    const assets: Record<string, string> = {};
+    if (state.currentTrack.albumArt) assets.large_image = state.currentTrack.albumArt;
+    assets.large_text = s.largeImageText
+      ? resolveVars(s.largeImageText)
+      : (state.isPlaying ? "" : "\u23F8 ") +
+        state.currentTrack.title +
+        (state.currentTrack.artist ? " \u2014 " + state.currentTrack.artist : "");
     if (s.smallImageKey) {
-      activity.smallImageKey = s.smallImageKey;
-      if (s.smallImageText) activity.smallImageText = resolveVars(s.smallImageText);
+      assets.small_image = s.smallImageKey;
+      if (s.smallImageText) assets.small_text = resolveVars(s.smallImageText);
     }
 
     const buttons: Array<{ label: string; url: string }> = [];
-    if (s.button1Label && s.button1Url) buttons.push({ label: s.button1Label.substring(0, 32), url: s.button1Url });
-    if (s.button2Label && s.button2Url) buttons.push({ label: s.button2Label.substring(0, 32), url: s.button2Url });
-    if (buttons.length > 0) activity.buttons = buttons;
+    if (s.button1Label && s.button1Url)
+      buttons.push({ label: s.button1Label.substring(0, 32), url: s.button1Url });
+    if (s.button2Label && s.button2Url)
+      buttons.push({ label: s.button2Label.substring(0, 32), url: s.button2Url });
 
+    let startTimestamp: number | undefined;
+    let endTimestamp: number | undefined;
     if (s.showTimestamp && state.isPlaying && state.trackStartTime) {
-      activity.startTimestamp = state.trackStartTime;
+      startTimestamp = state.trackStartTime;
       const dur = state.currentTrack.duration;
       if (typeof dur === "number" && isFinite(dur) && dur > 0) {
-        activity.endTimestamp = state.trackStartTime + dur * 1000;
+        endTimestamp = state.trackStartTime + dur * 1000;
       }
     }
 
-    state.discordRpc.setActivity(activity).catch(() => {});
+    const activity: Record<string, unknown> = {
+      details,
+      state: s.customStatus
+        ? resolveVars(s.customStatus).substring(0, 128)
+        : artistState,
+      assets,
+      type: s.activityType,
+      instance: false,
+      timestamps: buildTimestamps(startTimestamp, endTimestamp),
+    };
+    if (buttons.length > 0) activity.buttons = buttons;
+
+    sendActivity(activity);
   } catch {
     // Silently fail on RPC errors
-  }
-}
-
-function setPresence(activity: Record<string, unknown>): void {
-  if (!state.discordRpc) return;
-  try {
-    state.discordRpc.setActivity(activity).catch(() => {});
-  } catch {
-    // Silently fail
   }
 }
 
