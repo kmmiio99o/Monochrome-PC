@@ -9,10 +9,7 @@ function resolveVars(text: string): string {
     .replace(/\{status\}/g, state.isPlaying ? "Playing" : "Paused");
 }
 
-function buildTimestamps(
-  startTimestamp?: number,
-  endTimestamp?: number,
-): { start?: number; end?: number } | undefined {
+function buildTimestamps(startTimestamp?: number, endTimestamp?: number): { start?: number; end?: number } | undefined {
   if (!startTimestamp && !endTimestamp) return undefined;
   return { start: startTimestamp, end: endTimestamp };
 }
@@ -21,10 +18,10 @@ function sendActivity(activity: Record<string, unknown>): void {
   if (!state.discordRpc) return;
   const pid = process.pid;
   // discord-rpc Client has request() at runtime but it's not in the type definitions
-  const rpc = state.discordRpc as unknown as { request: (cmd: string, args: Record<string, unknown>) => Promise<unknown> };
-  rpc
-    .request(SET_ACTIVITY, { pid, activity })
-    .catch(() => {});
+  const rpc = state.discordRpc as unknown as {
+    request: (cmd: string, args: Record<string, unknown>) => Promise<unknown>;
+  };
+  rpc.request(SET_ACTIVITY, { pid, activity }).catch(() => {});
 }
 
 export function updateDiscordPresence(): void {
@@ -35,9 +32,7 @@ export function updateDiscordPresence(): void {
       sendActivity({
         type: state.rpcSettings.activityType,
         instance: false,
-        state: state.rpcSettings.customStatus
-          ? resolveVars(state.rpcSettings.customStatus).substring(0, 128)
-          : "Idle",
+        state: state.rpcSettings.customStatus ? resolveVars(state.rpcSettings.customStatus).substring(0, 128) : "Idle",
       });
     } else {
       clearDiscordPresence();
@@ -58,9 +53,7 @@ export function updateDiscordPresence(): void {
         ? state.currentTrack.title.substring(0, 128)
         : undefined;
 
-    const artistState = s.showArtist
-      ? state.currentTrack.artist.substring(0, 128)
-      : undefined;
+    const artistState = s.showArtist ? state.currentTrack.artist.substring(0, 128) : undefined;
 
     const assets: Record<string, string> = {};
     if (state.currentTrack.albumArt) assets.large_image = state.currentTrack.albumArt;
@@ -75,10 +68,8 @@ export function updateDiscordPresence(): void {
     }
 
     const buttons: Array<{ label: string; url: string }> = [];
-    if (s.button1Label && s.button1Url)
-      buttons.push({ label: s.button1Label.substring(0, 32), url: s.button1Url });
-    if (s.button2Label && s.button2Url)
-      buttons.push({ label: s.button2Label.substring(0, 32), url: s.button2Url });
+    if (s.button1Label && s.button1Url) buttons.push({ label: s.button1Label.substring(0, 32), url: s.button1Url });
+    if (s.button2Label && s.button2Url) buttons.push({ label: s.button2Label.substring(0, 32), url: s.button2Url });
 
     let startTimestamp: number | undefined;
     let endTimestamp: number | undefined;
@@ -92,9 +83,7 @@ export function updateDiscordPresence(): void {
 
     const activity: Record<string, unknown> = {
       details,
-      state: s.customStatus
-        ? resolveVars(s.customStatus).substring(0, 128)
-        : artistState,
+      state: s.customStatus ? resolveVars(s.customStatus).substring(0, 128) : artistState,
       assets,
       type: s.activityType,
       instance: false,
