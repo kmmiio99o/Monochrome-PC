@@ -82,7 +82,7 @@ jobs:
         run: |
           ver="${{ steps.version.outputs.VERSION }}"
           mkdir -p "Monochrome-PC-$ver"
-          cp -r assets bun.lock flake.nix LICENSE package.json PKGBUILD src tsconfig.json .gitignore "Monochrome-PC-$ver/"
+          cp -r assets bun.lock flake.nix LICENSE package.json PKGBUILD src tsconfig.json .gitignore VERSION "Monochrome-PC-$ver/"
           tar czf "monochrome-player-bin-$ver.tar.gz" "Monochrome-PC-$ver"
           rm -rf "Monochrome-PC-$ver"
 
