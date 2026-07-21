@@ -1,6 +1,6 @@
 pkgbase = monochrome-player-bin
 	pkgdesc = A minimalist desktop wrapper for monochrome.tf with Discord Rich Presence, tray controls, and media keys.
-	pkgver = 1.1.0
+	pkgver = 1.1.1
 	pkgrel = 1
 	url = https://github.com/kmmiio99o/Monochrome-PC
 	arch = x86_64
@@ -17,7 +17,7 @@ pkgbase = monochrome-player-bin
 	depends = xdg-utils
 	depends = libsecret
 	depends = libappindicator-gtk3
-	source = monochrome-player-bin-1.1.0.tar.gz::https://github.com/kmmiio99o/Monochrome-PC/archive/refs/tags/v1.1.0.tar.gz
+	source = monochrome-player-bin-1.1.1.tar.gz::https://github.com/kmmiio99o/Monochrome-PC/archive/refs/tags/v1.1.1.tar.gz
 	sha256sums = SKIP
 
 pkgname = monochrome-player-bin
